@@ -39,15 +39,18 @@ def _image_pos(name):
     查找指定图片在背景图中的位置
     """
     pull_screenshot()
-    imsrc = ac.imread('bg.jpg')
+    imsrc = ac.imread('bg.png')
     imobj = ac.imread('images/0{}.PNG'.format(name))
     # find the match position
-    pos = ac.find_template(imsrc, imobj)
+    pos = ac.find_template(imsrc, imobj,0.8)
     circle_center_pos = None
     if pos != None:
         circle_center_pos = pos['result']
+        # print('找到图片坐标[{},{}]'.format(circle_center_pos[0],circle_center_pos[1]))
     return circle_center_pos
 
+def tap(pos):
+    S.tap(750 - pos[1], pos[0])
 
 def main():
     """
@@ -60,32 +63,33 @@ def main():
             pos = _image_pos('1')
             if pos != None:
                 print('开始第{}次闯关'.format(count))
-                S.tap(pos[0], pos[1])
+                tap(pos)
                 break
             time.sleep(5)
         # 查找“点击屏幕继续”文字，并点击
         while True:
             pos = _image_pos('4')
             if pos != None:
-                S.tap(pos[0], pos[1])
+                tap(pos)
                 print('本次闯关完成，共获得[{}]金币'.format(count * 56))
                 print('点击屏幕继续')
                 break
             # 查找“跳过”或“自动”按钮，并点击
             pos = _image_pos('2')
             if pos != None:
-                S.tap(pos[0], pos[1])
+                tap(pos)
                 print('自动跳过对话')
+                time.sleep(1)
             pos = _image_pos('3')
             if pos != None:
-                S.tap(pos[0], pos[1])  
+                tap(pos)
                 print('开始自动闯关')              
-            time.sleep(5)
+            time.sleep(3)
         # 查找“再次挑战按钮”，并点击
         while True:
             pos = _image_pos('5')
             if pos != None:
-                S.tap(pos[0], pos[1])
+                tap(pos)
                 print('再次挑战')  
                 break
             time.sleep(5)
