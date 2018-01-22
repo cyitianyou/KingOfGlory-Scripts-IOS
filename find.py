@@ -4,6 +4,7 @@
 """
 import aircv as ac
 
+
 def _image_pos(name):
     """
     查找指定图片在背景图中的位置
@@ -14,6 +15,7 @@ def _image_pos(name):
     pos = ac.find_template(imsrc, imobj)
     circle_center_pos = pos['result']
     return circle_center_pos
+
 
 if __name__ == '__main__':
     _image_pos('01')

@@ -3,9 +3,9 @@
 python 脚本,自动刷王者荣耀冒险模式金币
 """
 import os
+import sys
 import shutil
 import time
-import random
 import wda
 import aircv as ac
 
@@ -42,15 +42,17 @@ def _image_pos(name):
     imsrc = ac.imread('bg.png')
     imobj = ac.imread('images/0{}.PNG'.format(name))
     # find the match position
-    pos = ac.find_template(imsrc, imobj,0.8)
+    pos = ac.find_template(imsrc, imobj, 0.8)
     circle_center_pos = None
     if pos != None:
         circle_center_pos = pos['result']
         # print('找到图片坐标[{},{}]'.format(circle_center_pos[0],circle_center_pos[1]))
     return circle_center_pos
 
+
 def tap(pos):
     S.tap(750 - pos[1], pos[0])
+
 
 def main():
     """
@@ -83,18 +85,26 @@ def main():
             pos = _image_pos('3')
             if pos != None:
                 tap(pos)
-                print('开始自动闯关')              
+                print('开始自动闯关')
             time.sleep(3)
         # 查找“再次挑战按钮”，并点击
         while True:
             pos = _image_pos('5')
             if pos != None:
+                time.sleep(2)
+                pos_upper = _image_pos('6')
+                if pos_upper != None:
+                    # 金币达到上限
+                    print('检测到金币达到上限,脚本自动退出!')
+                    C.home()
+                    sys.exit()
                 tap(pos)
-                print('再次挑战')  
+                print('再次挑战')
                 break
-            time.sleep(5)
-        #闯关次数+1
+            time.sleep(3)
+        # 闯关次数+1
         count = count + 1
+
 
 if __name__ == '__main__':
     main()
